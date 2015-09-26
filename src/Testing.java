@@ -16,8 +16,18 @@ public class Testing {
 	final static int MAX_NO_OF_THREAD = 8;
 
 	public static void main(String[] args) {
+//		oldTesting();
+		Manga manga = new Manga("mangafox.me/manga/fairy_tail/");
+		ExecutorService mangaList = Executors.newFixedThreadPool(DownloaderConstants.MAX_NO_OF_THREADS.getValue());
+		mangaList.execute(manga);
+		mangaList.shutdown();
+		while (!mangaList.isTerminated()) {
+		}
+	}
+	
+	@SuppressWarnings("unused")
+	private static void oldTesting(){
 		Document doc;
-		Mangafox mf = new Mangafox();
 		try {
 			String firstPage = "mangafox.me/manga/fairy_tail/";// v01/c003/";
 			doc = Jsoup.connect("http://" + firstPage).timeout(MAX_TIMEOUT)
@@ -25,12 +35,10 @@ public class Testing {
 
 			Elements chapters = doc.select("ul.chlist h4 a");
 
-			ExecutorService executor = Executors
-					.newFixedThreadPool(MAX_NO_OF_THREAD);
+			ExecutorService executor = Executors.newFixedThreadPool(MAX_NO_OF_THREAD);
 			for (int i = chapters.size()-1 ; i >= 0 ; i--){
 				Element chapter = chapters.get(i);
-				String chapterUrl = chapter.attr("href").replaceFirst(
-						"http://", "");
+				String chapterUrl = chapter.attr("href").replaceFirst("http://", "");
 				String[] url = chapterUrl.split("/");
 				List<String> chapterParts = new ArrayList<String>(
 						Arrays.asList(url));
@@ -39,8 +47,8 @@ public class Testing {
 				String newChapterUrl = String.join("/", chapterParts);
 				chapterParts.remove(0);
 				chapterParts.remove(0);
-				String desinationFolder = String.join("/", chapterParts) + "/";
-				System.out.println("current chapter: " + desinationFolder);
+				String desinationFolder = System.getProperty("user.home") + "/Documents/Manga/"+String.join("/", chapterParts) + "/";
+				System.out.println("current chapter: " + desinationFolder + " - "+ newChapterUrl);
 
 				Runnable worker = new Runnable() {
 
@@ -52,9 +60,8 @@ public class Testing {
 						try {
 							docPages = Jsoup.connect("http://" + newChapterUrl)
 									.timeout(MAX_TIMEOUT).get();
-							Elements pages = docPages.select("select.m")
-									.first()
-									.select("option:not(option[value=0]");
+							Elements pages = docPages.select("select.m").first().select("option:not(option[value=0]");
+							Mangafox mf = new Mangafox("Fairy Tail");
 							List<String> newPages = mf.getChapterPages(
 									newChapterUrl, pages);
 
@@ -85,6 +92,5 @@ public class Testing {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
 		}
-
 	}
 }

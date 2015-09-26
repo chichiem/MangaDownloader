@@ -10,7 +10,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class Mangafox extends Manga{
+public class Mangafox extends Manga {
+	Mangafox(String mangaUrl) {
+		super(mangaUrl);
+		// TODO Auto-generated constructor stub
+	}
+
 	final int MAX_NO_OF_THREAD = 8;
 	final int NO_OF_RETRIES = 5;
 	final int MAX_TIMEOUT = 10 * 1000;
@@ -51,9 +56,9 @@ public class Mangafox extends Manga{
 				} else {
 					imageNumber = "" + pageNumber;
 				}
-				Runnable worker = new Downloader(imgUrl, destinationFolder
-						+ imageNumber + ".jpg");
-				executor.execute(worker);
+				// Runnable worker = new Downloader(imgUrl, destinationFolder+
+				// imageNumber + ".jpg");
+				// executor.execute(worker);
 			}
 
 		}
