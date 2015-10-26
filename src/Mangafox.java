@@ -56,9 +56,8 @@ public class Mangafox extends Manga {
 				} else {
 					imageNumber = "" + pageNumber;
 				}
-				// Runnable worker = new Downloader(imgUrl, destinationFolder+
-				// imageNumber + ".jpg");
-				// executor.execute(worker);
+//				 Runnable worker = new Downloader(imgUrl, destinationFolder+imageNumber + ".jpg");
+//				 executor.execute(worker);
 			}
 
 		}

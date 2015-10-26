@@ -15,9 +15,10 @@ public class Page implements Runnable {
 	private String imageLocation;
 
 	Page(String destinationPath, String imageUrl, String pageNumber) {
-		this.setImage(imageUrl);
-		this.setPageNumber(pageNumber);
-		this.setDestinationPath(destinationPath);
+//		setImage(imageUrl);
+		setPageNumber(pageNumber);
+		setDestinationPath(destinationPath);
+//		System.out.println("Current page: "+getPageNumber()+" - "+getImageURL());
 	}
 
 	public String getImageURL() {

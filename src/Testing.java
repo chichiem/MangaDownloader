@@ -33,7 +33,7 @@ public class Testing {
 			doc = Jsoup.connect("http://" + firstPage).timeout(MAX_TIMEOUT)
 					.get();
 
-			Elements chapters = doc.select("ul.chlist h4 a");
+			Elements chapters = doc.select("ul.chlist a.tips");
 
 			ExecutorService executor = Executors.newFixedThreadPool(MAX_NO_OF_THREAD);
 			for (int i = chapters.size()-1 ; i >= 0 ; i--){

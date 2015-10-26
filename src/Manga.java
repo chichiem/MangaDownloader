@@ -11,10 +11,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class Manga implements Runnable{
-	public List<Chapter> mangaChapters = new ArrayList<Chapter>();
+	private List<Chapter> mangaChapters = new ArrayList<Chapter>();
 	private String mangaName;
 	private String mangaUrl;
 	private String mangaCoverImage;
+	
+	Manga(){
+		
+	}
 
 	Manga(String mangaUrl) {
 		this.setMangaUrl(mangaUrl);
@@ -65,10 +69,12 @@ public class Manga implements Runnable{
 		boolean success = false;
 
 		while (retry < DownloaderConstants.MAX_NO_OF_RETRIES.getValue()) {
+			System.out.println("Retries: "+ retry);
 			try {
 				System.out.println("Downloading... -"+ getMangaUrl());
 				doc = Jsoup.connect(getMangaUrl()).timeout(DownloaderConstants.MAX_TIMEOUT.getValue()).get();
 				mangaCover = doc.select("div.cover > img").first();
+				setMangaCoverImage(mangaCover.attr("src"));
 				success = true;
 				break;
 			} catch (SocketTimeoutException ex) {
@@ -93,7 +99,7 @@ public class Manga implements Runnable{
 				String chapterTitle = chapter.text()+ " - " +chapter.siblingElements().select(".title").first().text();
 				Chapter mangaChapter = new Chapter(getMangaName(),chapterTitle,chapterUrl);
 				addChapter(mangaChapter);
-				chapterList.execute(mangaChapter);
+//				chapterList.execute(mangaChapter);
 			}
 			chapterList.shutdown();
 			while (!chapterList.isTerminated()) {

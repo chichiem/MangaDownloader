@@ -12,15 +12,18 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class Chapter implements Runnable{
-	public List<Page> chapterPages = new ArrayList<Page>();
+	private List<Page> chapterPages = new ArrayList<Page>();
 	private String chapterName;
 	private String chapterUrl;
 	private String destinationPath;
 
 	Chapter(String mangaName, String chapterName, String chapterUrl) {
-		this.setChapterName(chapterName);
-		this.setChapterUrl(chapterUrl);
-		this.setDestinationPath(mangaName+"/"+getChapterName());
+		setChapterName(chapterName);
+		setChapterUrl(chapterUrl);
+		setDestinationPath(mangaName+"/"+getChapterName());
+		setPages();
+		
+//		System.out.println("Current chapter: "+ getChapterName());
 
 	}
 
@@ -81,18 +84,19 @@ public class Chapter implements Runnable{
 		}
 
 		if (success) {
-			System.out.println("Success Chapter... -"+ getChapterUrl());
 			ExecutorService pageList = Executors.newFixedThreadPool(DownloaderConstants.MAX_NO_OF_THREADS.getValue());
+			//add to downloader 
 			for (Element page : pages) {
-				String pageUrl = getChapterUrl() + "/" + page.attr("value")
-						+ ".html";
+				String pageUrl = getChapterUrl() + "/" + page.attr("value") + ".html";
 				Page chapterPage = new Page(getDestinationPath(), pageUrl, page.attr("value"));
+				System.out.println("Adding Page ... -"+ pageUrl);
 				addPage(chapterPage);
-				pageList.execute(chapterPage);
+//				pageList.execute(chapterPage);
 			}
 			pageList.shutdown();
 			while (!pageList.isTerminated()) {
 			}
+			System.out.println("Success Chapter... -"+ getChapterUrl());
 		}
 	}
 
