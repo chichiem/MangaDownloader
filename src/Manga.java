@@ -96,7 +96,10 @@ public class Manga implements Runnable{
 			for (int i = chapters.size()-1 ; i >= 0 ; i--){
 				Element chapter = chapters.get(i);
 				String chapterUrl = chapter.attr("href");
-				String chapterTitle = chapter.text()+ " - " +chapter.siblingElements().select(".title").first().text();
+				String chapterTitle = chapter.text();
+				if(chapter.siblingElements().select(".title").first() != null){
+					chapterTitle += " - " +chapter.siblingElements().select(".title").first().text();
+				}
 				Chapter mangaChapter = new Chapter(getMangaName(),chapterTitle,chapterUrl);
 				addChapter(mangaChapter);
 //				chapterList.execute(mangaChapter);
