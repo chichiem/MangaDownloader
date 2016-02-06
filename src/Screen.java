@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import org.jsoup.nodes.Element;
 
@@ -106,6 +107,7 @@ public class Screen {
 				chapterList.shutdown();
 				while (!chapterList.isTerminated()) {
 				}
+				JOptionPane.showMessageDialog(null, "Finished downloading");
 			}
 		});
 		
