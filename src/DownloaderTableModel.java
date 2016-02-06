@@ -42,7 +42,7 @@ public class DownloaderTableModel extends AbstractTableModel {
 			row  = new Vector<String>(5); 
 			row.addElement(m.getMangaName());
 			row.addElement(c.getChapterName());
-			row.addElement(c.getAllPages().size() + "");
+			row.addElement("");
 			row.addElement("Downloading...");
 			
 			rowData.add(row);

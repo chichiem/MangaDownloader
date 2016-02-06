@@ -12,7 +12,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class Chapter implements Runnable{
-	private List<Page> chapterPages = new ArrayList<Page>();
 	private String chapterName;
 	private String chapterUrl;
 	private String destinationPath;
@@ -21,10 +20,8 @@ public class Chapter implements Runnable{
 		setChapterName(chapterName);
 		setChapterUrl(chapterUrl);
 		setDestinationPath(mangaName+"/"+getChapterName());
-		setPages();
 		
-//		System.out.println("Current chapter: "+ getChapterName());
-
+		System.out.println("Current chapter: "+ getChapterName());
 	}
 
 	public String getChapterName() {
@@ -55,14 +52,6 @@ public class Chapter implements Runnable{
 		this.destinationPath = destinationPath;
 	}
 
-	public List<Page> getAllPages() {
-		return this.chapterPages;
-	}
-
-	public void addPage(Page page) {
-		this.chapterPages.add(page);
-	}
-	
 	private void setPages() {
 		Document doc = null;
 		Elements pages = null;
@@ -89,9 +78,7 @@ public class Chapter implements Runnable{
 			for (Element page : pages) {
 				String pageUrl = getChapterUrl() + "/" + page.attr("value") + ".html";
 				Page chapterPage = new Page(getDestinationPath(), pageUrl, page.attr("value"));
-				System.out.println("Adding Page ... -"+ pageUrl);
-				addPage(chapterPage);
-//				pageList.execute(chapterPage);
+				pageList.execute(chapterPage);
 			}
 			pageList.shutdown();
 			while (!pageList.isTerminated()) {

@@ -31,8 +31,6 @@ public class Screen {
 	private JTable table;
 	private JLabel lblHttp;
 	private JButton btnGetSelected;
-	private JTabbedPane tabbedPane;
-
 	/**
 	 * Launch the application.
 	 */
@@ -69,7 +67,7 @@ public class Screen {
 		lblHttp = new JLabel("http://");
 		mainScreen.getContentPane().add(lblHttp, "flowx,cell 0 0");
 		
-		mangaUrl = new JTextField("mangafox.me/manga/fairy_tail");
+		mangaUrl = new JTextField("mangafox.me/manga/yamada_kun_to_7_nin_no_majo/");
 		mainScreen.getContentPane().add(mangaUrl, "cell 0 0,growx");
 		mangaUrl.setColumns(10);
 		

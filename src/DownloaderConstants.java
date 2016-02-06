@@ -1,8 +1,8 @@
 
 public enum DownloaderConstants {
 	MAX_TIMEOUT(3000),
-	MAX_NO_OF_THREADS(3),
-	BYTE_SIZE(1024),
+	MAX_NO_OF_THREADS(8),
+	BYTE_SIZE(2048),
 	MAX_NO_OF_RETRIES(10)
 	;
 	

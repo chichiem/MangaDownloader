@@ -15,10 +15,10 @@ public class Page implements Runnable {
 	private String imageLocation;
 
 	Page(String destinationPath, String imageUrl, String pageNumber) {
-//		setImage(imageUrl);
+		setImage(imageUrl);
 		setPageNumber(pageNumber);
 		setDestinationPath(destinationPath);
-//		System.out.println("Current page: "+getPageNumber()+" - "+getImageURL());
+		System.out.println("Current page: "+getPageNumber()+" - "+getImageURL());
 	}
 
 	public String getImageURL() {
@@ -36,7 +36,9 @@ public class Page implements Runnable {
 				doc = Jsoup.connect(imageUrl)
 						.timeout(DownloaderConstants.MAX_TIMEOUT.getValue())
 						.get();
-				imgUrl = doc.select("div#viewer > a > img").first().attr("src");
+				
+//				System.out.println(doc.html());
+				imgUrl = doc.select("div#viewer a > img").first().attr("src");
 
 				success = true;
 				break;
@@ -94,58 +96,62 @@ public class Page implements Runnable {
 
 	public void saveImage() {
 		InputStream is;
-		try {
-			System.out.println("Downloading Page... -"+ getImageURL());
-			URL url = new URL(getImageURL());
-			is = url.openStream();
+		boolean downloaded = false;
+		while(downloaded == false){
+			try {
+				System.out.println("Downloading Page... -"+ getImageURL());
+				URL url = new URL(getImageURL());
+				is = url.openStream();
 
-			int fileSize = url.openConnection().getContentLength();
+				int fileSize = url.openConnection().getContentLength();
 
-			int partSize = Math
-					.round((fileSize / DownloaderConstants.MAX_NO_OF_THREADS
-							.getValue())
-							/ DownloaderConstants.BYTE_SIZE.getValue())
-					* DownloaderConstants.BYTE_SIZE.getValue();
+				int partSize = Math
+						.round((fileSize / DownloaderConstants.MAX_NO_OF_THREADS
+								.getValue())
+								/ DownloaderConstants.BYTE_SIZE.getValue())
+						* DownloaderConstants.BYTE_SIZE.getValue();
 
-			byte[] b = new byte[DownloaderConstants.BYTE_SIZE.getValue()];
-			int length = 0;
+				byte[] b = new byte[DownloaderConstants.BYTE_SIZE.getValue()];
+				int length = 0;
 
-			int startByte = 0;
-			int endByte = partSize - 1;
+				int startByte = 0;
+				int endByte = partSize - 1;
 
-			RandomAccessFile raf = new RandomAccessFile(getImageLocation(), "rw");
+				RandomAccessFile raf = new RandomAccessFile(getImageLocation(), "rw");
 
-			if (raf.length() < fileSize) {
+				if (raf.length() < fileSize) {
 
-				while (endByte < fileSize && endByte != -1) {
-					raf.seek(startByte);
+					while (endByte < fileSize && endByte != -1) {
+						raf.seek(startByte);
 
-					while ((length = is.read(b, 0,
-							DownloaderConstants.BYTE_SIZE.getValue())) != -1) {
-						raf.write(b, 0, length);
+						while ((length = is.read(b, 0,
+								DownloaderConstants.BYTE_SIZE.getValue())) != -1) {
+							raf.write(b, 0, length);
+						}
+
+						startByte = endByte + 1;
+						endByte += partSize;
+
 					}
 
-					startByte = endByte + 1;
-					endByte += partSize;
+					is.close();
+					raf.close();
 
+					System.out.println("saving images... - Done! "+ getImageLocation() + " - " + fileSize + " -- "+ partSize);
+				} else {
+					System.out.println("image Exists... - Skipping! "
+							+ getImageLocation() + " - " + fileSize + " -- "
+							+ partSize);
 				}
 
-				is.close();
-				raf.close();
-
-				System.out.println("saving images... - Done! "+ getImageLocation() + " - " + fileSize + " -- "+ partSize);
-			} else {
-				System.out.println("image Exists... - Skipping! "
-						+ getImageLocation() + " - " + fileSize + " -- "
-						+ partSize);
+				System.out
+						.println("==========================================================================");
+				downloaded = true;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				downloaded = false;
 			}
-
-			System.out
-					.println("==========================================================================");
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 
